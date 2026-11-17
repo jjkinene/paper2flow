@@ -1,0 +1,402 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Initialise Next.js 14 App Router project with TypeScript and Tailwind CSS": [
+      {
+        "executionId": "4faa248e-4593-4d8a-9533-13104c0305ef",
+        "chatSessionId": "sess_ceb44b9c-12d9-4545-9923-22042f3e9b1a",
+        "timestamp": 1794773924309
+      },
+      {
+        "executionId": "4faa248e-4593-4d8a-9533-13104c0305ef",
+        "chatSessionId": "sess_ceb44b9c-12d9-4545-9923-22042f3e9b1a",
+        "timestamp": 1794774854431
+      }
+    ],
+    "1.2 Create shared TypeScript types and constants": [
+      {
+        "executionId": "f1d25786-61db-4d6a-82ac-a8ee10143009",
+        "chatSessionId": "sess_acd3101c-caa3-476b-aaa7-ea5712487323",
+        "timestamp": 1794775168528
+      },
+      {
+        "executionId": "f1d25786-61db-4d6a-82ac-a8ee10143009",
+        "chatSessionId": "sess_acd3101c-caa3-476b-aaa7-ea5712487323",
+        "timestamp": 1794775187760
+      }
+    ],
+    "1.4 Create Supabase client utilities": [
+      {
+        "executionId": "49493910-e0f4-4fae-9645-7fba94a09447",
+        "chatSessionId": "sess_a9878c32-cd13-4b07-a9f1-a9e008f26743",
+        "timestamp": 1794775631907
+      },
+      {
+        "executionId": "49493910-e0f4-4fae-9645-7fba94a09447",
+        "chatSessionId": "sess_a9878c32-cd13-4b07-a9f1-a9e008f26743",
+        "timestamp": 1794775699647
+      }
+    ],
+    "2.1 Write SQL migration for tables and indexes": [
+      {
+        "executionId": "714a7548-6666-494c-b24b-18552b35de82",
+        "chatSessionId": "sess_916cae06-3354-4a08-90ae-27d6b387f882",
+        "timestamp": 1794775787724
+      },
+      {
+        "executionId": "714a7548-6666-494c-b24b-18552b35de82",
+        "chatSessionId": "sess_916cae06-3354-4a08-90ae-27d6b387f882",
+        "timestamp": 1794775823683
+      }
+    ],
+    "2.2 Write SQL migration for RLS policies": [
+      {
+        "executionId": "714a7548-6666-494c-b24b-18552b35de82",
+        "chatSessionId": "sess_916cae06-3354-4a08-90ae-27d6b387f882",
+        "timestamp": 1794775791353
+      },
+      {
+        "executionId": "714a7548-6666-494c-b24b-18552b35de82",
+        "chatSessionId": "sess_916cae06-3354-4a08-90ae-27d6b387f882",
+        "timestamp": 1794775826737
+      }
+    ],
+    "2. Database schema and RLS": [
+      {
+        "executionId": "714a7548-6666-494c-b24b-18552b35de82",
+        "chatSessionId": "sess_916cae06-3354-4a08-90ae-27d6b387f882",
+        "timestamp": 1794775827001
+      }
+    ],
+    "1.3 Create Zod validation schemas": [
+      {
+        "executionId": "b5a1c664-1e11-4c84-91e8-9d5cb0bc2cb2",
+        "chatSessionId": "sess_4c150956-2ae3-4d34-95d6-290692af5be2",
+        "timestamp": 1794776681566
+      },
+      {
+        "executionId": "b5a1c664-1e11-4c84-91e8-9d5cb0bc2cb2",
+        "chatSessionId": "sess_4c150956-2ae3-4d34-95d6-290692af5be2",
+        "timestamp": 1794776748825
+      }
+    ],
+    "1. Project scaffold and shared types": [
+      {
+        "executionId": "b5a1c664-1e11-4c84-91e8-9d5cb0bc2cb2",
+        "chatSessionId": "sess_4c150956-2ae3-4d34-95d6-290692af5be2",
+        "timestamp": 1794776749006
+      }
+    ],
+    "3. Admin authentication": [
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794776953290
+      },
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794777032968
+      }
+    ],
+    "3.1 Build the login page": [
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794776956282
+      },
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794777032665
+      }
+    ],
+    "3.2 Build the admin auth-guard layout": [
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794776958888
+      },
+      {
+        "executionId": "528605e8-9cb6-48c2-9f7e-a53c67659c75",
+        "chatSessionId": "sess_ad1de7f4-9909-4f2a-8535-58a0f30f8158",
+        "timestamp": 1794777032858
+      }
+    ],
+    "4. File upload UI and Supabase Storage": [
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777756506
+      },
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777954074
+      }
+    ],
+    "4.1 Build the `FileUploader` component": [
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777759616
+      },
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777953618
+      }
+    ],
+    "4.2 Build the upload server action and upload page": [
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777762473
+      },
+      {
+        "executionId": "26021c53-c711-431f-bc7c-159c544a9f83",
+        "chatSessionId": "sess_7a6b4745-0fc5-466a-9ecc-bec58c265c82",
+        "timestamp": 1794777953954
+      }
+    ],
+    "5. AI extraction pipeline": [
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816680375
+      },
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794817032025
+      }
+    ],
+    "5.1 Build the PDF page renderer": [
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816683606
+      },
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816959908
+      }
+    ],
+    "5.2 Build the GPT-4o Vision extraction caller": [
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816686810
+      },
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816960887
+      }
+    ],
+    "5.3 Build the pipeline orchestrator": [
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794816964447
+      },
+      {
+        "executionId": "6eec7bd9-999a-4d57-8169-50a4edf4cdbe",
+        "chatSessionId": "sess_8ed7e2fe-c13a-466b-b1f9-29a119aa9acd",
+        "timestamp": 1794817031804
+      }
+    ],
+    "6.1 Build the extraction status API route": [
+      {
+        "executionId": "6932570e-4864-42cd-a4ca-c5511af44375",
+        "chatSessionId": "sess_4629541d-0949-49f0-84e6-fd9b6a9e27d1",
+        "timestamp": 1794817628994
+      },
+      {
+        "executionId": "6932570e-4864-42cd-a4ca-c5511af44375",
+        "chatSessionId": "sess_4629541d-0949-49f0-84e6-fd9b6a9e27d1",
+        "timestamp": 1794817850160
+      }
+    ],
+    "6.2 Build the `ExtractionStatus` component": [
+      {
+        "executionId": "6932570e-4864-42cd-a4ca-c5511af44375",
+        "chatSessionId": "sess_4629541d-0949-49f0-84e6-fd9b6a9e27d1",
+        "timestamp": 1794817853120
+      },
+      {
+        "executionId": "6932570e-4864-42cd-a4ca-c5511af44375",
+        "chatSessionId": "sess_4629541d-0949-49f0-84e6-fd9b6a9e27d1",
+        "timestamp": 1794818032213
+      }
+    ],
+    "6. Extraction status polling": [
+      {
+        "executionId": "6932570e-4864-42cd-a4ca-c5511af44375",
+        "chatSessionId": "sess_4629541d-0949-49f0-84e6-fd9b6a9e27d1",
+        "timestamp": 1794818032433
+      }
+    ],
+    "7.1 Build `ConfidenceBadge` and `FieldEditor` components": [
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818268127
+      },
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818355705
+      }
+    ],
+    "7.2 Build the `FormBuilder` component": [
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818358661
+      },
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818506553
+      }
+    ],
+    "7.3 Build the review page and save action": [
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818509877
+      },
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818714513
+      }
+    ],
+    "7. Form builder and review UI": [
+      {
+        "executionId": "05d7e37f-cce5-4c53-9762-fa3a68b2312e",
+        "chatSessionId": "sess_0c0d190b-4776-4e2f-846f-611210a056ed",
+        "timestamp": 1794818714805
+      }
+    ],
+    "8.1 Build `PublishButton` and `ShareUrlDisplay` components": [
+      {
+        "executionId": "e60e0798-c265-45fb-b9c2-81451f42ef51",
+        "chatSessionId": "sess_138c3d84-a9e0-4f2e-af60-c41921f80f39",
+        "timestamp": 1794819028631
+      },
+      {
+        "executionId": "e60e0798-c265-45fb-b9c2-81451f42ef51",
+        "chatSessionId": "sess_138c3d84-a9e0-4f2e-af60-c41921f80f39",
+        "timestamp": 1794819292804
+      }
+    ],
+    "8.2 Build publish and unpublish server actions": [
+      {
+        "executionId": "e60e0798-c265-45fb-b9c2-81451f42ef51",
+        "chatSessionId": "sess_138c3d84-a9e0-4f2e-af60-c41921f80f39",
+        "timestamp": 1794819296042
+      },
+      {
+        "executionId": "e60e0798-c265-45fb-b9c2-81451f42ef51",
+        "chatSessionId": "sess_138c3d84-a9e0-4f2e-af60-c41921f80f39",
+        "timestamp": 1794819361712
+      }
+    ],
+    "8. Form publishing": [
+      {
+        "executionId": "e60e0798-c265-45fb-b9c2-81451f42ef51",
+        "chatSessionId": "sess_138c3d84-a9e0-4f2e-af60-c41921f80f39",
+        "timestamp": 1794819361839
+      }
+    ],
+    "9.1 Build the `FieldRenderer` component": [
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794819606430
+      },
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794819932578
+      }
+    ],
+    "9.2 Build the `PublicForm` component": [
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794819935819
+      },
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794820016244
+      }
+    ],
+    "9.3 Build the public form page": [
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794820020511
+      },
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794820195124
+      }
+    ],
+    "9. Public form renderer": [
+      {
+        "executionId": "a9a92b1a-528b-4772-8780-dafd36ff115e",
+        "chatSessionId": "sess_85078ae6-1786-4f26-89b4-30301214e5cc",
+        "timestamp": 1794820195322
+      }
+    ],
+    "10.1 Build the submission route handler": [
+      {
+        "executionId": "0a9d7e4e-45d9-440b-b615-8302158b459c",
+        "chatSessionId": "sess_6bbc1756-8afb-4873-8647-5fefdf6ffe34",
+        "timestamp": 1794821705080
+      },
+      {
+        "executionId": "0a9d7e4e-45d9-440b-b615-8302158b459c",
+        "chatSessionId": "sess_6bbc1756-8afb-4873-8647-5fefdf6ffe34",
+        "timestamp": 1794821765168
+      }
+    ],
+    "10. Form submission API": [
+      {
+        "executionId": "0a9d7e4e-45d9-440b-b615-8302158b459c",
+        "chatSessionId": "sess_6bbc1756-8afb-4873-8647-5fefdf6ffe34",
+        "timestamp": 1794821765290
+      }
+    ],
+    "11. Response viewer": [
+      {
+        "executionId": "c77b3245-35ba-4229-bd18-7acb09dee96c",
+        "chatSessionId": "sess_2ddc40db-d9e9-4b3a-859c-8c2eb87b6ea0",
+        "timestamp": 1794822782333
+      },
+      {
+        "executionId": "c77b3245-35ba-4229-bd18-7acb09dee96c",
+        "chatSessionId": "sess_2ddc40db-d9e9-4b3a-859c-8c2eb87b6ea0",
+        "timestamp": 1794822997845
+      }
+    ],
+    "11.2 Build the responses page": [
+      {
+        "executionId": "a906b79a-ef5e-43f1-ab14-acc957206414",
+        "chatSessionId": "sess_54c39ce8-5511-4808-9922-d8c4f0f4cec9",
+        "timestamp": 1794823098437
+      },
+      {
+        "executionId": "a906b79a-ef5e-43f1-ab14-acc957206414",
+        "chatSessionId": "sess_54c39ce8-5511-4808-9922-d8c4f0f4cec9",
+        "timestamp": 1794823167882
+      }
+    ]
+  }
+}
