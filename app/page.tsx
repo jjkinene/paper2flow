@@ -45,7 +45,7 @@ export default function Home() {
             Bring your paper process online in minutes. Upload a form, let AI find the fields, review the result, then share a link and start collecting responses.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/login" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700">
+        <Link href="/signup" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:-translate-y-0.5 hover:bg-indigo-700">
               Get Started <span aria-hidden="true">→</span>
             </Link>
             <a href="#how-it-works" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 transition hover:border-indigo-200 hover:text-indigo-700">See how it works</a>
@@ -116,7 +116,7 @@ export default function Home() {
       <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 rounded-3xl bg-indigo-600 px-7 py-10 text-center text-white shadow-xl shadow-indigo-200 sm:px-12 md:flex-row md:text-left">
           <div><h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Your next form can be online today.</h2><p className="mt-2 text-sm text-indigo-100">Start with the paper forms you already have.</p></div>
-          <Link href="/login" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50">Get Started <span aria-hidden="true">→</span></Link>
+          <Link href="/signup" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50">Get Started <span aria-hidden="true">→</span></Link>
         </div>
       </section>
 

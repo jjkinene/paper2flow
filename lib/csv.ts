@@ -23,8 +23,13 @@ function escapeCsvCell(value: unknown): string {
     text = String(value);
   }
 
-  // CSV escaping:
-  // wrap every value in quotes and double internal quotes
+  // Prevent formula injection when Excel/Sheets opens an exported CSV.
+  // Quoting a CSV cell alone does NOT stop spreadsheet formula execution.
+  if (!(typeof value === "number" && Number.isFinite(value)) && /^[\u0000-\u0020]*[=+\-@]/.test(text)) {
+    text = "'" + text;
+  }
+
+  // Wrap every value in quotes and double internal quotes.
   return `"${text.replace(/"/g, '""')}"`;
 }
 

@@ -51,7 +51,7 @@ const DraftSchemaZod = z.object({
   title: z.string(),
   description: z.string(),
   sections: z.array(DraftSectionSchema),
-  fields: z.array(DraftFieldSchema),
+  fields: z.array(DraftFieldSchema).min(1, 'The document contains no form fields'),
 });
 
 // ---------------------------------------------------------------------------
@@ -60,13 +60,9 @@ const DraftSchemaZod = z.object({
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-/** Convert raw bytes to a base64 string. */
+/** Node.js conversion avoids allocating a character per byte. */
 function toBase64(bytes: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
+  return Buffer.from(bytes).toString('base64');
 }
 
 /** Map a MIME type to the data-URI media type used in the OpenAI image_url. */
@@ -175,23 +171,20 @@ export async function extractFormSchema(
     ? callPdfApi(fileBytes, prompt, signal)
     : callVisionApi(imageParts, prompt, signal);
 
-  let rawResponse: string;
+  // Network errors, API failures, and timeouts should fail immediately so the
+  // pipeline records an actionable failure (not a second expensive API call).
+  const rawResponse = await callModel(EXTRACTION_SYSTEM_PROMPT);
   try {
-    rawResponse = await callModel(EXTRACTION_SYSTEM_PROMPT);
     return parseAndValidate(rawResponse);
-  } catch (firstError) {
-    // 4. Single retry with a stricter prompt.
-    const stricterPrompt =
-      EXTRACTION_SYSTEM_PROMPT + '\nReturn ONLY a JSON object. No other text.';
-
+  } catch (parseError) {
+    // One retry is appropriate when the model replies with invalid JSON.
+    const stricterPrompt = EXTRACTION_SYSTEM_PROMPT +
+      '\nReturn ONLY a complete JSON object. No markdown, no commentary.';
+    const retryResponse = await callModel(stricterPrompt);
     try {
-      rawResponse = await callModel(stricterPrompt);
-      return parseAndValidate(rawResponse);
-    } catch (secondError) {
-      throw new Error(
-        `Extraction failed after retry. First error: ${(firstError as Error).message}. ` +
-          `Second error: ${(secondError as Error).message}`,
-      );
+      return parseAndValidate(retryResponse);
+    } catch {
+      throw new Error(`The AI returned an invalid form schema after retry: ${parseError instanceof Error ? parseError.message : 'invalid JSON'}`);
     }
   }
 }

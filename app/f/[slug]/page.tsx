@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PublicForm } from '@/components/form/PublicForm';
@@ -84,9 +84,10 @@ export default async function PublicFormPage({ params }: PageProps) {
               />
             </svg>
             <h1 className="text-xl font-semibold text-gray-800 mb-2">Form Unavailable</h1>
-            <p className="text-gray-500 text-sm leading-relaxed">
+            <p className="text-gray-600 text-sm leading-relaxed">
               This form is not available. It may have been unpublished or the link may be incorrect.
             </p>
+            <Link href="/" className="mt-5 inline-block text-sm font-semibold text-indigo-700 hover:underline">← Paper2Flow home</Link>
           </div>
         </div>
       </main>
@@ -96,6 +97,11 @@ export default async function PublicFormPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="w-full max-w-2xl mx-auto px-4 py-8 sm:py-12">
+        <div className="mb-2 px-4">
+          <Link href="/" className="inline-flex items-center text-sm font-semibold text-indigo-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+            ← Paper2Flow home
+          </Link>
+        </div>
         <PublicForm form={form} />
       </div>
     </main>

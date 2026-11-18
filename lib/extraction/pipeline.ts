@@ -114,11 +114,11 @@ async function runPipeline(formId: string, signal: AbortSignal): Promise<void> {
 /**
  * Orchestrate the full extraction pipeline for a given form.
  *
- * Downloads the source document, calls GPT-4o Vision, persists the resulting
+ * Downloads the source document, calls OpenAI, persists the resulting
  * fields, and updates the form status to `'review'`. On any error the form
  * status is set to `'failed'` and the error message is recorded.
  *
- * A 60-second timeout is enforced via `Promise.race`.
+ * An AbortSignal limits model processing to 120 seconds.
  *
  * Requirements: 2.1, 2.5, 2.6
  */

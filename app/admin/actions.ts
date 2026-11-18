@@ -1,5 +1,4 @@
 'use server';
-import { runExtractionPipeline } from "@/lib/extraction/pipeline";
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseServiceClient } from '@/lib/supabase/service';
@@ -47,6 +46,13 @@ export async function uploadDocument(
   if (!file) {
     return { error: 'No file provided.' };
   }
+  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+  if (!allowedTypes.includes(file.type)) {
+    return { error: 'Unsupported file type. Use PDF, JPG, or PNG.' };
+  }
+  if (file.size === 0 || file.size > 20 * 1024 * 1024) {
+    return { error: 'File must be between 1 byte and 20 MB.' };
+  }
 
   // 3. Derive storage path components.
   const formId = crypto.randomUUID();
@@ -56,6 +62,15 @@ export async function uploadDocument(
   // 4. Upload to Supabase Storage using the service-role client.
   const serviceClient = createSupabaseServiceClient();
   const fileBytes = await file.arrayBuffer();
+  const signature = new Uint8Array(fileBytes.slice(0, 8));
+  const isPdf = signature[0] === 0x25 && signature[1] === 0x50 && signature[2] === 0x44 && signature[3] === 0x46;
+  const isJpeg = signature[0] === 0xff && signature[1] === 0xd8 && signature[2] === 0xff;
+  const isPng = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every((n, index) => signature[index] === n);
+  if (!((file.type === 'application/pdf' && isPdf) ||
+    (file.type === 'image/jpeg' && isJpeg) ||
+    (file.type === 'image/png' && isPng))) {
+    return { error: 'The uploaded file does not match its declared PDF/JPG/PNG format.' };
+  }
 
   const { error: storageError } = await serviceClient.storage
     .from('source-documents')
@@ -68,13 +83,13 @@ export async function uploadDocument(
     return { error: `Storage upload failed: ${storageError.message}` };
   }
 
-  // 5. INSERT the forms row (status = 'processing') only after a successful upload.
+  // 5. INSERT as draft; the extraction route atomically claims it for work.
   const { error: dbError } = await serviceClient
     .from('forms')
     .insert({
       id: formId,
       owner_id: user.id,
-      status: 'processing',
+      status: 'draft',
       source_path: storagePath,
     });
 
@@ -86,16 +101,8 @@ export async function uploadDocument(
     return { error: `Database insert failed: ${dbError.message}` };
   }
 
-  // 6. Kick off the extraction pipeline as a non-blocking call.
-  //    runExtractionPipeline is implemented in Task 5 (lib/extraction/pipeline.ts).
-  //    We use a string path with require() so TypeScript does not resolve the
-  //    module at compile time; the try/catch swallows the error if the module
-  //    does not exist yet.
-  try {
-  await runExtractionPipeline(formId);
-} catch (error) {
-  console.error("EXTRACTION START ERROR:", error);
-}
+  // 6. Return immediately. The status screen triggers the extraction route,
+  //    so no long-running OpenAI request blocks this server action.
 
   return { formId };
 }

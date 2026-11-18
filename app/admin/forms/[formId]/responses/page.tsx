@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import ResponseTable from '@/components/admin/ResponseTable';
 import CsvExportButton from '@/components/admin/CsvExportButton';
@@ -122,6 +123,7 @@ export default async function ResponsesPage({ params, searchParams }: PageProps)
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
+      <Link href="/admin" className="inline-flex text-sm font-semibold text-indigo-700 hover:underline">← Back to dashboard</Link>
       {/* Header */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>

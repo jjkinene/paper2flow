@@ -1,6 +1,7 @@
-﻿import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import SignOutButton from '@/components/admin/SignOutButton';
+import Link from 'next/link';
 
 export default async function AdminLayout({
   children,
@@ -22,13 +23,16 @@ export default async function AdminLayout({
       <nav className="bg-indigo-600 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
-            <a
+            <Link
               href="/admin"
               className="text-lg font-semibold text-white hover:text-indigo-100 transition-colors"
             >
               Paper2Flow
-            </a>
+            </Link>
             <div className="flex items-center gap-3">
+              <Link href="/admin" className="rounded-md bg-white/15 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                ← Dashboard
+              </Link>
               <span className="hidden text-sm text-indigo-200 sm:block">
                 {user.email}
               </span>

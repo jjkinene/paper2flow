@@ -119,10 +119,12 @@ export default async function AdminPage() {
                   <td className="px-4 py-4">
                     <div className="flex justify-end gap-3">
                       <Link
-                        href={`/admin/forms/${form.id}/review`}
+                        href={['draft', 'processing', 'failed'].includes(form.status)
+                          ? `/admin/forms/${form.id}/status`
+                          : `/admin/forms/${form.id}/review`}
                         className="font-medium underline"
                       >
-                        Review
+                        {['draft', 'processing', 'failed'].includes(form.status) ? 'View Status' : 'Review'}
                       </Link>
 
                       <Link
