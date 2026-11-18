@@ -24,7 +24,14 @@ export default function LoginForm() {
       const supabase = createSupabaseBrowserClient();
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) {
-        setError(authError.message);
+        const message = authError.message.toLowerCase();
+        if (message.includes('email not confirmed') || message.includes('not confirmed')) {
+          setError('Please confirm your email using the link we sent you before signing in.');
+        } else if (message.includes('invalid login credentials')) {
+          setError('The email or password is incorrect. If you forgot your password, use the recovery link below.');
+        } else {
+          setError('We could not sign you in right now. Please try again.');
+        }
         return;
       }
       router.push('/admin');
@@ -58,6 +65,7 @@ export default function LoginForm() {
           <div>
             <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">Password</label>
             <input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-700 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
+            <div className="mt-2 text-right"><Link href="/forgot-password" className="text-sm font-semibold text-indigo-700 underline-offset-2 hover:underline">Forgot password?</Link></div>
           </div>
 
           {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}

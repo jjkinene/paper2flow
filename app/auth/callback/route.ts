@@ -6,7 +6,10 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const next = request.nextUrl.searchParams.get('next');
-  const destination = next?.startsWith('/') && !next.startsWith('//') ? next : '/admin';
+  const destination = next?.startsWith('/') && !next.startsWith('//')
+    && (next === '/admin' || next === '/signup' || next === '/reset-password')
+    ? next
+    : '/admin';
 
   if (code) {
     const supabase = createSupabaseServerClient();
