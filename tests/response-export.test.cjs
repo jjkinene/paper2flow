@@ -49,7 +49,9 @@ function unzipTextEntries(buffer) {
 }
 
 test('PDF export contains matching saved answers and paginates long, multiple responses', async () => {
+  const { GlobalFonts } = require('@napi-rs/canvas');
   const pdf = formatResponsesPdf('Community Intake Form', fields, responses);
+  assert.ok(GlobalFonts.has('Paper2FlowGeist'), 'the bundled PDF font should be registered');
   assert.equal(pdf.subarray(0, 5).toString('ascii'), '%PDF-');
   const pageCount = [...pdf.toString('latin1').matchAll(/\/Type\s*\/Page\b/g)].length;
   assert.ok(pageCount >= 2, `expected multiple PDF pages, received ${pageCount}`);
@@ -63,7 +65,12 @@ test('PDF export contains matching saved answers and paginates long, multiple re
       const content = await page.getTextContent();
       text += content.items.map((item) => ('str' in item ? item.str : '')).join(' ');
     }
-    for (const value of ['Community Intake Form', 'Applicant name', 'Details', 'SAMPLE ANSWER ONE', 'SAMPLE ANSWER TWO', 'Page 1 of']) {
+    for (const value of [
+      'Paper2Flow', 'Community Intake Form', 'Response 1', 'Response 2',
+      '18 November 2026 at 10:00 UTC', 'Applicant name', 'Details',
+      'SAMPLE ANSWER ONE', 'Long response', 'SAMPLE ANSWER TWO',
+      `Page 1 of ${document.numPages}`, `Page ${document.numPages} of ${document.numPages}`,
+    ]) {
       assert.ok(text.includes(value), `missing PDF content: ${value}`);
     }
   } finally {

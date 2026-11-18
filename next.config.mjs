@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
+    outputFileTracingIncludes: {
+      '/api/forms/[formId]/export': ['./app/fonts/GeistVF.woff'],
+    },
     // Next's default 1 MB Server Action limit is too small for PDF uploads.
     // On Vercel, requests may still have a lower platform-level payload limit;
     // large files require direct-to-Storage uploads in a future update.

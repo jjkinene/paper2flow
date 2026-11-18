@@ -1,5 +1,6 @@
-import { PDFDocument } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts, PDFDocument } from '@napi-rs/canvas';
 import { deflateRawSync } from 'node:zlib';
+import { resolve } from 'node:path';
 import type { Field, Response } from '@/types/schema';
 import { formatResponseAnswer, getResponseAnswer } from './response-data';
 
@@ -7,7 +8,16 @@ const PAGE_WIDTH = 612;
 const PAGE_HEIGHT = 792;
 const MARGIN = 48;
 const CONTENT_BOTTOM = 724;
+const PDF_FONT_FAMILY = 'Paper2FlowGeist';
 type PdfContext = ReturnType<PDFDocument['beginPage']>;
+
+function ensurePdfFontRegistered(): void {
+  if (GlobalFonts.has(PDF_FONT_FAMILY)) return;
+  const fontPath = resolve(process.cwd(), 'app', 'fonts', 'GeistVF.woff');
+  if (!GlobalFonts.registerFromPath(fontPath, PDF_FONT_FAMILY)) {
+    throw new Error('The bundled Paper2Flow PDF font could not be loaded.');
+  }
+}
 
 export function submittedDate(value: string): string {
   const date = new Date(value);
@@ -51,14 +61,14 @@ interface PdfLine { text: string; y: number; font: string; color: string }
 
 /** Professionally typeset response bundle with wrapped answers and page numbers. */
 export function formatResponsesPdf(title: string, fields: Field[], responses: Response[]): Buffer {
+  ensurePdfFontRegistered();
   const doc = new PDFDocument({ title: `${title} responses`, author: 'Paper2Flow', creator: 'Paper2Flow' });
   const pages: PdfLine[][] = [];
   let current: PdfLine[] = [];
   let y = 126;
 
   const startPage = () => { if (current.length) pages.push(current); current = []; y = 126; };
-  const metricDoc = new PDFDocument();
-  const metric = metricDoc.beginPage(PAGE_WIDTH, PAGE_HEIGHT);
+  const metric = createCanvas(1, 1).getContext('2d');
   const addMeasuredText = (text: string, font: string, color: string, x = MARGIN, maxWidth = PAGE_WIDTH - MARGIN * 2, lineHeight = 16) => {
     metric.font = font;
     for (const line of wrapText(metric, text, maxWidth)) {
@@ -68,38 +78,36 @@ export function formatResponsesPdf(title: string, fields: Field[], responses: Re
     }
   };
   const orderedFields = [...fields].sort((a, b) => a.position - b.position);
-  addMeasuredText(title, 'bold 17px Arial', '#111827', MARGIN, 500, 22);
+  addMeasuredText(title, `bold 17px ${PDF_FONT_FAMILY}`, '#111827', MARGIN, 500, 22);
   y += 10;
   responses.forEach((response, responseIndex) => {
     if (responseIndex > 0 && y > 126) startPage();
     if (responseIndex > 0) {
-      current.push({ text: '____________________________________________________________________', y, font: '10px Arial', color: '#cbd5e1' });
+      current.push({ text: '────────────────────────────────────────────────────────────────────', y, font: `10px ${PDF_FONT_FAMILY}`, color: '#cbd5e1' });
       y += 18;
     }
-    addMeasuredText(`Response ${responseIndex + 1}`, 'bold 19px Arial', '#1e1b4b', MARGIN, 500, 25);
-    addMeasuredText(`Submitted ${submittedDate(response.submittedAt)}`, '12px Arial', '#475569', MARGIN, 500, 20);
+    addMeasuredText(`Response ${responseIndex + 1}`, `bold 19px ${PDF_FONT_FAMILY}`, '#1e1b4b', MARGIN, 500, 25);
+    addMeasuredText(`Submitted ${submittedDate(response.submittedAt)}`, `12px ${PDF_FONT_FAMILY}`, '#475569', MARGIN, 500, 20);
     y += 5;
     for (const field of orderedFields) {
       const answer = formatResponseAnswer(getResponseAnswer(response.payload, field));
-      addMeasuredText(field.label, 'bold 11px Arial', '#334155', MARGIN, 500, 15);
-      addMeasuredText(answer || '(No answer)', '12px Arial', '#111827', MARGIN, 500, 17);
+      addMeasuredText(field.label, `bold 11px ${PDF_FONT_FAMILY}`, '#334155', MARGIN, 500, 15);
+      addMeasuredText(answer || '(No answer)', `12px ${PDF_FONT_FAMILY}`, '#111827', MARGIN, 500, 17);
       y += 8;
     }
   });
   if (current.length || !pages.length) pages.push(current);
-  metricDoc.endPage();
-
   pages.forEach((lines, index) => {
     const ctx = doc.beginPage(PAGE_WIDTH, PAGE_HEIGHT);
     ctx.fillStyle = '#312e81';
     ctx.fillRect(0, 0, PAGE_WIDTH, 82);
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 18px Arial';
+    ctx.font = `bold 18px ${PDF_FONT_FAMILY}`;
     ctx.fillText('Paper2Flow', MARGIN, 36);
-    ctx.font = '11px Arial';
+    ctx.font = `11px ${PDF_FONT_FAMILY}`;
     ctx.fillText('FORM RESPONSES', MARGIN, 59);
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 10px Arial';
+    ctx.font = `bold 10px ${PDF_FONT_FAMILY}`;
     ctx.fillText('Submission records', MARGIN, 105);
     for (const line of lines) {
       ctx.fillStyle = line.color;
@@ -108,7 +116,7 @@ export function formatResponsesPdf(title: string, fields: Field[], responses: Re
     }
     ctx.strokeStyle = '#e2e8f0';
     ctx.beginPath(); ctx.moveTo(MARGIN, 750); ctx.lineTo(PAGE_WIDTH - MARGIN, 750); ctx.stroke();
-    ctx.fillStyle = '#64748b'; ctx.font = '9px Arial';
+    ctx.fillStyle = '#64748b'; ctx.font = `9px ${PDF_FONT_FAMILY}`;
     ctx.fillText('Story Crown Technologies Ltd · Paper2Flow', MARGIN, 768);
     ctx.textAlign = 'right';
     ctx.fillText(`Page ${index + 1} of ${pages.length}`, PAGE_WIDTH - MARGIN, 768);
