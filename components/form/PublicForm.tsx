@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import type { FormSchema, Field } from '@/types/schema';
 import { buildResponseSchema } from '@/lib/validation';
+import { buildSubmissionPayload } from '@/lib/response-data';
 import { FieldRenderer } from './FieldRenderer';
 
 interface PublicFormProps {
@@ -43,7 +44,9 @@ export function PublicForm({ form }: PublicFormProps) {
 
     // Client-side Zod validation
     const schema = buildResponseSchema(sortedFields);
-    const result = schema.safeParse(values);
+    const formData = new FormData(e.currentTarget);
+    const submittedValues = buildSubmissionPayload(formData, sortedFields);
+    const result = schema.safeParse(submittedValues);
 
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;

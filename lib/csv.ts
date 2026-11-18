@@ -1,4 +1,5 @@
 import type { Field, Response } from "@/types/schema";
+import { getResponseAnswer } from "@/lib/response-data";
 
 const UTF8_BOM = "\uFEFF";
 
@@ -93,7 +94,7 @@ export function formatCsv(
     const payload = getResponsePayload(response);
 
     const values = orderedFields.map((field) => {
-      const value = payload[getFieldId(field)];
+      const value = getResponseAnswer(payload, { id: getFieldId(field) });
 
       if (getFieldType(field) === "date") {
         return formatDateValue(value);

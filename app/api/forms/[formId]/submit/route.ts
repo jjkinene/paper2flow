@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseServiceClient } from '@/lib/supabase/service';
 import { buildResponseSchema } from '@/lib/validation';
+import { normalizeResponsePayload } from '@/lib/response-data';
 import type { Field } from '@/types/schema';
 
 // Bound the request before JSON parsing. A normal text form fits within 256 KB.
@@ -123,17 +124,19 @@ export async function POST(
   // Only the trusted server may write responses. The DB function checks that
   // the form is STILL published, rate-limits atomically, then inserts.
   const serviceClient = createSupabaseServiceClient();
+  const responsePayload = normalizeResponsePayload(result.data, typedFields);
   const { data: resultStatus, error: insertError } = await serviceClient.rpc(
     'submit_public_response',
     {
       p_form_id: formId,
-      p_payload: result.data,
+      p_payload: responsePayload,
       p_identity_hash: getRateLimitIdentity(request, formId),
     },
   );
 
   if (insertError) {
-    console.error('Public form submission failed:', insertError);
+    // Never log provider/database diagnostics that could contain submitted data.
+    console.error('Public form submission could not be stored.');
     return NextResponse.json({ error: 'Submission temporarily unavailable' }, { status: 503 });
   }
   if (resultStatus === 'not_found') {

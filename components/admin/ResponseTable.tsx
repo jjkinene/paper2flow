@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { Field, Response } from '@/types/schema';
+import { formatResponseAnswer, getResponseAnswer } from '@/lib/response-data';
 
 const PAGE_SIZE = 50;
 
@@ -14,12 +15,6 @@ interface ResponseTableProps {
 }
 
 /** Format a cell value for display. Arrays (checkbox answers) become comma-separated strings. */
-function formatCellValue(value: unknown): string {
-  if (value === null || value === undefined) return '';
-  if (Array.isArray(value)) return value.join(', ');
-  return String(value);
-}
-
 /** Format an ISO 8601 timestamp as a readable local date+time string. */
 function formatDate(iso: string): string {
   try {
@@ -126,7 +121,7 @@ export default function ResponseTable({
                 </td>
                 {fields.map((field) => (
                   <td key={field.id} className="px-4 py-3 text-gray-800">
-                    {formatCellValue(response.payload[field.id])}
+                    {formatResponseAnswer(getResponseAnswer(response.payload, field))}
                   </td>
                 ))}
               </tr>
