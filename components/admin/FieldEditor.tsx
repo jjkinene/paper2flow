@@ -82,7 +82,7 @@ export default function FieldEditor({ field, onChange }: FieldEditorProps) {
   const inputCls =
     'w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500';
 
-  const labelCls = 'block text-xs font-medium text-gray-600 mb-1';
+  const labelCls = 'block text-xs font-medium text-gray-800 mb-1';
 
   return (
     <div className="space-y-4">
@@ -178,7 +178,7 @@ export default function FieldEditor({ field, onChange }: FieldEditorProps) {
                   type="button"
                   onClick={() => handleDeleteOption(index)}
                   aria-label={`Delete option ${index + 1}`}
-                  className="rounded p-1 text-gray-400 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          className="rounded p-1 text-gray-700 hover:text-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                 >
                   <svg
                     className="h-4 w-4"
@@ -203,7 +203,7 @@ export default function FieldEditor({ field, onChange }: FieldEditorProps) {
           <button
             type="button"
             onClick={handleAddOption}
-            className="mt-2 inline-flex items-center gap-1 rounded-md border border-dashed border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:border-indigo-400 hover:text-indigo-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="mt-2 inline-flex items-center gap-1 rounded-md border border-dashed border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-800 hover:border-indigo-500 hover:text-indigo-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             <svg
               className="h-3.5 w-3.5"

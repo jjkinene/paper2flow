@@ -18,7 +18,7 @@ export function FieldRenderer({ field, value, onChange, error }: FieldRendererPr
   // Base input classes for consistent styling
   const baseInputClasses = `
     w-full px-3 py-2 border rounded-md bg-white text-gray-900
-    placeholder:text-gray-500 placeholder:opacity-100
+    placeholder:text-gray-700 placeholder:opacity-100
     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
     disabled:bg-gray-100 disabled:text-gray-700 disabled:cursor-not-allowed
     ${hasError ? 'border-red-500' : 'border-gray-300'}

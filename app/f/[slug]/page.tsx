@@ -84,7 +84,7 @@ export default async function PublicFormPage({ params }: PageProps) {
               />
             </svg>
             <h1 className="text-xl font-semibold text-gray-800 mb-2">Form Unavailable</h1>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-800 text-sm leading-relaxed">
               This form is not available. It may have been unpublished or the link may be incorrect.
             </p>
             <Link href="/" className="mt-5 inline-block text-sm font-semibold text-indigo-700 hover:underline">← Paper2Flow home</Link>

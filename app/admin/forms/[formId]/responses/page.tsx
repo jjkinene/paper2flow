@@ -128,7 +128,7 @@ export default async function ResponsesPage({ params, searchParams }: PageProps)
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{form.title}</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-gray-800">
             All submissions for this form
           </p>
         </div>

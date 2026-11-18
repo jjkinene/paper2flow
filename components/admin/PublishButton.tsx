@@ -177,7 +177,7 @@ export default function PublishButton({ formId, fields, onPublished }: PublishBu
                 <h2 id="publish-dialog-title" className="text-base font-semibold text-gray-900">
                   Unresolved low-confidence fields
                 </h2>
-                <p id="publish-dialog-desc" className="mt-1.5 text-sm text-gray-600">
+                <p id="publish-dialog-desc" className="mt-1.5 text-sm text-gray-800">
                   {unresolvedCount === 1
                     ? '1 field has a low confidence score and has not been reviewed.'
                     : `${unresolvedCount} fields have low confidence scores and have not been reviewed.`}{' '}

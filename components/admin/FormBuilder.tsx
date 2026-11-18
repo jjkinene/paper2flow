@@ -77,7 +77,7 @@ function SortableFieldRow({ field, onFieldChange, onDelete }: SortableFieldRowPr
         <button
           type="button"
           aria-label="Drag to reorder"
-          className="mt-1 cursor-grab touch-none rounded p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:cursor-grabbing"
+          className="mt-1 cursor-grab touch-none rounded p-1 text-gray-700 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:cursor-grabbing"
           {...attributes}
           {...listeners}
         >
@@ -101,7 +101,7 @@ function SortableFieldRow({ field, onFieldChange, onDelete }: SortableFieldRowPr
         {/* Editor + badge */}
         <div className="flex-1 space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-medium text-gray-500">
+            <span className="text-xs font-medium text-gray-700">
               Field {field.position + 1}
             </span>
             <ConfidenceBadge
@@ -121,7 +121,7 @@ function SortableFieldRow({ field, onFieldChange, onDelete }: SortableFieldRowPr
           type="button"
           aria-label={`Delete field ${field.position + 1}`}
           onClick={() => onDelete(field.id)}
-          className="mt-1 rounded p-1 text-gray-400 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          className="mt-1 rounded p-1 text-gray-700 hover:text-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
         >
           <svg
             className="h-5 w-5"
@@ -311,7 +311,7 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
 
       {/* Sortable field list */}
       {fields.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-gray-300 py-10 text-center text-sm text-gray-500">
+        <p className="rounded-lg border border-dashed border-gray-300 py-10 text-center text-sm text-gray-700">
           No fields yet. Click &ldquo;Add Field&rdquo; to get started.
         </p>
       ) : (

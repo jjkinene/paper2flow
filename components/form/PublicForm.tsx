@@ -125,7 +125,7 @@ export function PublicForm({ form }: PublicFormProps) {
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{form.title}</h1>
         {form.description && (
-          <p className="text-gray-600 text-base leading-relaxed">{form.description}</p>
+          <p className="text-gray-800 text-base leading-relaxed">{form.description}</p>
         )}
       </header>
 

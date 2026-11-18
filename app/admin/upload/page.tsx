@@ -49,7 +49,7 @@ export default function UploadPage() {
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Upload a Paper Form</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-gray-800">
           Upload a scanned PDF, JPG, or PNG and the AI will detect the form structure for you.
         </p>
       </div>

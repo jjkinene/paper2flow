@@ -50,7 +50,7 @@ export default async function AdminPage() {
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Your Forms</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-gray-800">
             Manage your digitized forms and collected responses.
           </p>
         </div>
@@ -67,7 +67,7 @@ export default async function AdminPage() {
         <div className="rounded-lg border border-dashed p-10 text-center">
           <h2 className="text-lg font-semibold">No forms yet</h2>
 
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-800">
             Upload your first paper form or scanned PDF to get started.
           </p>
 
@@ -110,7 +110,7 @@ export default async function AdminPage() {
                     {form.responseCount}
                   </td>
 
-                  <td className="px-4 py-4 text-gray-600">
+                  <td className="px-4 py-4 text-gray-800">
                     {form.updated_at
                       ? new Date(form.updated_at).toLocaleDateString()
                       : "—"}

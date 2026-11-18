@@ -82,7 +82,7 @@ export default async function ReviewPage({ params }: PageProps) {
       <header className="space-y-2">
         <Link href="/admin" className="inline-flex text-sm font-semibold text-indigo-700 hover:underline">← Back to dashboard</Link>
         <h1 className="text-3xl font-bold text-gray-900">Review Form</h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-800">
           Edit the form fields, title, and description before publishing.
         </p>
       </header>

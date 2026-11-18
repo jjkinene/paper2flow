@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 type SocialProvider = 'google' | 'azure' | 'facebook';
@@ -12,8 +13,11 @@ const PROVIDERS: { id: SocialProvider; name: string; abbreviation: string }[] = 
 ];
 
 export default function SocialAuthButtons() {
+  return null;
+
   const [activeProvider, setActiveProvider] = useState<SocialProvider | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const pathname = usePathname();
 
   async function signIn(provider: SocialProvider) {
     setError(null);
@@ -23,12 +27,17 @@ export default function SocialAuthButtons() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(pathname === '/signup' ? '/signup' : '/admin')}`,
           ...(provider === 'azure' ? { scopes: 'email' } : {}),
         },
       });
       if (authError) {
-        setError(`${authError.message}. Check that the provider is enabled in Supabase.`);
+        const message = authError.message.toLowerCase();
+        if (message.includes('unsupported provider') || message.includes('provider is not enabled')) {
+          setError(`${nameForProvider(provider)} sign-in is not enabled for this Paper2Flow account yet. Use email and password, or ask the administrator to enable this provider in Supabase.`);
+        } else {
+          setError(`Could not start ${nameForProvider(provider)} sign-in. ${authError.message}`);
+        }
         setActiveProvider(null);
       }
       // On success, Supabase redirects the browser to the provider.
@@ -40,7 +49,7 @@ export default function SocialAuthButtons() {
 
   return (
     <section className="space-y-3" aria-label="Other ways to sign in">
-      <div className="flex items-center gap-3 text-xs font-medium text-gray-500">
+      <div className="flex items-center gap-3 text-xs font-medium text-gray-700">
         <span className="h-px flex-1 bg-gray-200" />
         <span>or continue with</span>
         <span className="h-px flex-1 bg-gray-200" />
@@ -63,4 +72,8 @@ export default function SocialAuthButtons() {
       {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>}
     </section>
   );
+}
+
+function nameForProvider(provider: SocialProvider): string {
+  return PROVIDERS.find((item) => item.id === provider)?.name ?? 'Social';
 }

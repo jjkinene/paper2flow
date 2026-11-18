@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const url = new URL('/login', request.url);
-  url.searchParams.set('verification', 'failed');
+  const url = new URL(destination === '/signup' ? '/signup' : '/login', request.url);
+  url.searchParams.set(destination === '/signup' ? 'oauth' : 'verification', 'failed');
   return NextResponse.redirect(url);
 }

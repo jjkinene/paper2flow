@@ -128,7 +128,7 @@ export default function FileUploader({
         {selectedFile ? (
           <div className="space-y-1">
             <p className="text-sm font-medium text-gray-800">{selectedFile.name}</p>
-            <p className="text-xs text-gray-500">{formatBytes(selectedFile.size)}</p>
+            <p className="text-xs text-gray-700">{formatBytes(selectedFile.size)}</p>
             <p className="text-xs text-indigo-600">Click to choose a different file</p>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function FileUploader({
               Drag &amp; drop your file here, or{' '}
               <span className="text-indigo-600 underline">browse</span>
             </p>
-            <p className="text-xs text-gray-500">PDF, JPG, or PNG · Max {MAX_SIZE_LABEL}</p>
+            <p className="text-xs text-gray-700">PDF, JPG, or PNG · Max {MAX_SIZE_LABEL}</p>
           </div>
         )}
       </div>
@@ -169,7 +169,7 @@ export default function FileUploader({
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-right text-xs text-gray-500">{progress}%</p>
+          <p className="text-right text-xs text-gray-700">{progress}%</p>
         </div>
       )}
 
