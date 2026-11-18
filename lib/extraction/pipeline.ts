@@ -1,6 +1,7 @@
 import 'server-only';
 import { createSupabaseServiceClient } from '@/lib/supabase/service';
 import { extractFormSchema, type DraftField } from './extract';
+import { ExtractionError } from './schema';
 
 // ---------------------------------------------------------------------------
 // MIME type helpers
@@ -127,7 +128,11 @@ export async function runExtractionPipeline(formId: string): Promise<void> {
   try {
     await runPipeline(formId, timeout);
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+    // AI/storage messages are fixed, user-safe strings; unexpected internal
+    // failures are deliberately not copied into the form's public status.
+    const message = err instanceof ExtractionError
+      ? err.message
+      : 'Form extraction failed unexpectedly. Please try uploading the document again.';
 
     // Best-effort failure update — if this also fails, nothing more we can do.
     const supabase = createSupabaseServiceClient();
@@ -139,7 +144,7 @@ export async function runExtractionPipeline(formId: string): Promise<void> {
         updated_at: new Date().toISOString(),
       })
       .eq('id', formId);
-    if (updateError) console.error(`Could not mark form ${formId} failed: ${updateError.message}`, err);
+    if (updateError) console.error(`Could not mark form ${formId} failed.`, formId);
 
     // Re-throw so the caller (e.g. a background trigger) can observe the error.
     throw err;

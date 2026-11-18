@@ -1,79 +1,35 @@
 import 'server-only';
-import { z } from 'zod';
 import OpenAI from 'openai';
+import { zodResponseFormat, zodTextFormat } from 'openai/helpers/zod';
 import { createSupabaseServiceClient } from '@/lib/supabase/service';
 import { EXTRACTION_SYSTEM_PROMPT } from './prompt';
+import {
+  DraftSchemaZod,
+  ExtractionError,
+  parseDraftJson,
+  type DraftSchema,
+} from './schema';
 
-// ---------------------------------------------------------------------------
-// DraftSchema types
-// ---------------------------------------------------------------------------
+export type { DraftField, DraftSchema } from './schema';
 
-export interface DraftField {
-  label: string;
-  fieldType: 'text' | 'number' | 'date' | 'checkbox' | 'radio' | 'textarea';
-  placeholder: string;
-  required: boolean;
-  options: Array<{ label: string; value: string }> | null;
-  confidence: number;
-}
+const MAX_ATTEMPTS = 2;
+const INITIAL_OUTPUT_TOKENS = 4096;
+const RETRY_OUTPUT_TOKENS = 8192;
 
-export interface DraftSchema {
-  title: string;
-  description: string;
-  sections: Array<{ heading: string; instruction: string }>;
-  fields: DraftField[];
-}
-
-// ---------------------------------------------------------------------------
-// Zod validation for the AI response
-// ---------------------------------------------------------------------------
-
-const DraftFieldOptionSchema = z.object({
-  label: z.string(),
-  value: z.string(),
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  // Make the bounded application retry policy the only retry policy.
+  maxRetries: 0,
 });
 
-const DraftFieldSchema = z.object({
-  label: z.string(),
-  fieldType: z.enum(['text', 'number', 'date', 'checkbox', 'radio', 'textarea']),
-  placeholder: z.string(),
-  required: z.boolean(),
-  options: z.array(DraftFieldOptionSchema).nullable(),
-  confidence: z.number().min(0).max(1),
-});
-
-const DraftSectionSchema = z.object({
-  heading: z.string(),
-  instruction: z.string(),
-});
-
-const DraftSchemaZod = z.object({
-  title: z.string(),
-  description: z.string(),
-  sections: z.array(DraftSectionSchema),
-  fields: z.array(DraftFieldSchema).min(1, 'The document contains no form fields'),
-});
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-/** Node.js conversion avoids allocating a character per byte. */
 function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString('base64');
 }
-
-/** Map a MIME type to the data-URI media type used in the OpenAI image_url. */
 function imageMediaType(mimeType: string): string {
   if (mimeType === 'image/jpeg' || mimeType === 'image/jpg') return 'image/jpeg';
-  if (mimeType === 'image/png') return 'image/png';
-  // PDF pages are always rendered as PNG by renderPdfPages
   return 'image/png';
 }
 
-/** Build the OpenAI image_url content parts from an array of base64 strings. */
 function buildImageParts(
   base64Images: string[],
   mediaType: string,
@@ -84,16 +40,21 @@ function buildImageParts(
   }));
 }
 
-/** Call the GPT-4o Vision API and return the raw text response. */
+function hasPdfRefusal(response: OpenAI.Responses.Response): boolean {
+  return response.output.some((item) =>
+    item.type === 'message' && item.content.some((part) => part.type === 'refusal'),
+  );
+}
+
 async function callVisionApi(
   imageParts: OpenAI.Chat.ChatCompletionContentPart[],
-  systemPrompt: string,
-  signal?: AbortSignal,
-): Promise<string> {
+  signal: AbortSignal | undefined,
+  maxTokens: number,
+): Promise<DraftSchema> {
   const response = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
-      { role: 'system', content: systemPrompt },
+      { role: 'system', content: EXTRACTION_SYSTEM_PROMPT },
       {
         role: 'user',
         content: [
@@ -102,89 +63,129 @@ async function callVisionApi(
         ],
       },
     ],
-  max_tokens: 4096,
-}, { signal });
+    response_format: zodResponseFormat(DraftSchemaZod, 'paper2flow_form_schema'),
+    max_tokens: maxTokens,
+  }, { signal });
 
-  const content = response.choices[0]?.message?.content;
-  if (!content) {
-    throw new Error('GPT-4o returned an empty response.');
+  const choice = response.choices[0];
+  const message = choice?.message;
+  if (message?.refusal || choice?.finish_reason === 'content_filter') {
+    throw new ExtractionError('REFUSED');
   }
-  return content;
+  if (choice?.finish_reason === 'length') throw new ExtractionError('INCOMPLETE');
+  if (choice?.finish_reason !== 'stop' || !message?.content) {
+    throw new ExtractionError('MODEL_UNAVAILABLE');
+  }
+
+  // Structured Outputs should always be JSON, but keep a guarded parser for
+  // API/proxy regressions and validate the application-specific non-empty rule.
+  return parseDraftJson(message.content);
 }
 
-async function callPdfApi(fileBytes: Uint8Array, systemPrompt: string, signal?: AbortSignal): Promise<string> {
+async function callPdfApi(
+  fileBytes: Uint8Array,
+  signal: AbortSignal | undefined,
+  maxTokens: number,
+): Promise<DraftSchema> {
   const response = await openai.responses.create({
     model: 'gpt-4o',
     input: [{
       role: 'user',
       content: [
         { type: 'input_text', text: 'Extract the form structure from this PDF document.' },
-        { type: 'input_file', filename: 'source.pdf', file_data: `data:application/pdf;base64,${toBase64(fileBytes)}` },
+        {
+          type: 'input_file',
+          filename: 'source.pdf',
+          file_data: `data:application/pdf;base64,${toBase64(fileBytes)}`,
+        },
       ],
     }],
-    instructions: systemPrompt,
-    max_output_tokens: 4096,
-}, { signal });
-  if (!response.output_text) throw new Error('OpenAI returned an empty response.');
-  return response.output_text;
+    instructions: EXTRACTION_SYSTEM_PROMPT,
+    text: { format: zodTextFormat(DraftSchemaZod, 'paper2flow_form_schema') },
+    max_output_tokens: maxTokens,
+    store: false,
+  }, { signal });
+
+  if (hasPdfRefusal(response)) throw new ExtractionError('REFUSED');
+  if (response.status === 'incomplete') throw new ExtractionError('INCOMPLETE');
+  if (response.status !== 'completed') throw new ExtractionError('MODEL_UNAVAILABLE');
+  if (!response.output_text) throw new ExtractionError('MODEL_UNAVAILABLE');
+  return parseDraftJson(response.output_text);
 }
 
-/** Parse the raw text from the model and validate against DraftSchemaZod. */
-function parseAndValidate(raw: string): DraftSchema {
-  const parsed: unknown = JSON.parse(raw);
-  return DraftSchemaZod.parse(parsed) as DraftSchema;
+function isRetryableProviderError(error: unknown): boolean {
+  if (error instanceof ExtractionError) return error.code === 'INCOMPLETE';
+  if (error instanceof OpenAI.APIConnectionError || error instanceof OpenAI.APIConnectionTimeoutError) return true;
+  if (error instanceof OpenAI.RateLimitError) return true;
+  if (error instanceof OpenAI.InternalServerError) return true;
+  return false;
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
+function normalizeProviderError(error: unknown): ExtractionError {
+  if (error instanceof ExtractionError) return error;
+  if (error instanceof OpenAI.BadRequestError || error instanceof OpenAI.UnprocessableEntityError) {
+    return new ExtractionError('INVALID_DOCUMENT');
+  }
+  return new ExtractionError('MODEL_UNAVAILABLE');
+}
 
 /**
- * Download a source document from Supabase Storage, extract its form structure
- * using GPT-4o Vision, and return a validated DraftSchema.
- *
- * Requirements: 2.1, 2.2, 2.3
+ * Extracts a schema from already-downloaded bytes. Kept separate so the model
+ * request can be exercised end-to-end without coupling it to Storage setup.
  */
+export async function extractBytesToSchema(
+  fileBytes: Uint8Array,
+  mimeType: string,
+  signal?: AbortSignal,
+): Promise<DraftSchema> {
+  if (!fileBytes.byteLength) throw new ExtractionError('INVALID_DOCUMENT');
+  if (mimeType !== 'application/pdf' && mimeType !== 'image/jpeg' && mimeType !== 'image/jpg' && mimeType !== 'image/png') {
+    throw new ExtractionError('INVALID_DOCUMENT');
+  }
+
+  const isPdf = mimeType === 'application/pdf';
+  const imageParts = isPdf
+    ? []
+    : buildImageParts([toBase64(fileBytes)], imageMediaType(mimeType));
+  let lastError: ExtractionError = new ExtractionError('MODEL_UNAVAILABLE');
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+    try {
+      return isPdf
+        ? await callPdfApi(fileBytes, signal, attempt === 0 ? INITIAL_OUTPUT_TOKENS : RETRY_OUTPUT_TOKENS)
+        : await callVisionApi(imageParts, signal, attempt === 0 ? INITIAL_OUTPUT_TOKENS : RETRY_OUTPUT_TOKENS);
+    } catch (error) {
+      const safeError = normalizeProviderError(error);
+      if (error instanceof ExtractionError) lastError = error;
+      else lastError = safeError;
+
+      if (attempt + 1 >= MAX_ATTEMPTS || !isRetryableProviderError(error)) {
+        throw safeError;
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+/** Download an uploaded document from Storage, then extract a validated schema. */
 export async function extractFormSchema(
   storagePath: string,
   mimeType: string,
   signal?: AbortSignal,
 ): Promise<DraftSchema> {
-  // 1. Download file bytes from Supabase Storage via the service-role client.
   const supabase = createSupabaseServiceClient();
   const { data: blob, error: downloadError } = await supabase.storage
     .from('source-documents')
     .download(storagePath);
 
-  if (downloadError || !blob) {
-    throw new Error(
-      `Failed to download source document from Storage: ${downloadError?.message ?? 'unknown error'}`,
-    );
-  }
+  if (downloadError || !blob) throw new ExtractionError('SOURCE_UNAVAILABLE');
 
-  const arrayBuffer = await blob.arrayBuffer();
-  const fileBytes = new Uint8Array(arrayBuffer);
-
-  const isPdf = mimeType === 'application/pdf';
-  const imageParts = isPdf ? [] : buildImageParts([toBase64(fileBytes)], imageMediaType(mimeType));
-  const callModel = (prompt: string) => isPdf
-    ? callPdfApi(fileBytes, prompt, signal)
-    : callVisionApi(imageParts, prompt, signal);
-
-  // Network errors, API failures, and timeouts should fail immediately so the
-  // pipeline records an actionable failure (not a second expensive API call).
-  const rawResponse = await callModel(EXTRACTION_SYSTEM_PROMPT);
   try {
-    return parseAndValidate(rawResponse);
-  } catch (parseError) {
-    // One retry is appropriate when the model replies with invalid JSON.
-    const stricterPrompt = EXTRACTION_SYSTEM_PROMPT +
-      '\nReturn ONLY a complete JSON object. No markdown, no commentary.';
-    const retryResponse = await callModel(stricterPrompt);
-    try {
-      return parseAndValidate(retryResponse);
-    } catch {
-      throw new Error(`The AI returned an invalid form schema after retry: ${parseError instanceof Error ? parseError.message : 'invalid JSON'}`);
-    }
+    return await extractBytesToSchema(new Uint8Array(await blob.arrayBuffer()), mimeType, signal);
+  } catch (error) {
+    if (error instanceof ExtractionError) throw error;
+    // Do not persist provider messages, response text, or document contents.
+    throw normalizeProviderError(error);
   }
 }
