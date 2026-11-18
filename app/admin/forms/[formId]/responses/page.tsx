@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import ResponseTable from '@/components/admin/ResponseTable';
-import CsvExportButton from '@/components/admin/CsvExportButton';
+import ResponseExportButtons from '@/components/admin/ResponseExportButtons';
 import type { Field, Response } from '@/types/schema';
 
 const PAGE_SIZE = 50;
@@ -133,9 +133,7 @@ export default async function ResponsesPage({ params, searchParams }: PageProps)
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <CsvExportButton formId={formId} responseCount={safeCount} />
-        </div>
+        <ResponseExportButtons formId={formId} responseCount={safeCount} />
       </header>
 
       {/* Responses table */}

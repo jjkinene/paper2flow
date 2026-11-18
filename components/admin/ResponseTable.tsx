@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { Field, Response } from '@/types/schema';
 import { formatResponseAnswer, getResponseAnswer } from '@/lib/response-data';
+import { IndividualResponsePdfButton } from './ResponseExportButtons';
 
 const PAGE_SIZE = 50;
 
@@ -99,6 +100,7 @@ export default function ResponseTable({
               >
                 Submitted At
               </th>
+              <th scope="col" className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Export</th>
               {fields.map((field) => (
                 <th
                   key={field.id}
@@ -118,6 +120,9 @@ export default function ResponseTable({
               >
                   <td className="whitespace-nowrap px-4 py-3 text-gray-800">
                   {formatDate(response.submittedAt)}
+                </td>
+                <td className="px-4 py-3">
+                  <IndividualResponsePdfButton formId={response.formId} responseId={response.id} />
                 </td>
                 {fields.map((field) => (
                   <td key={field.id} className="px-4 py-3 text-gray-800">
