@@ -78,7 +78,7 @@ export default async function ReviewPage({ params }: PageProps) {
   }));
 
   return (
-    <main className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+    <main className="mx-auto max-w-5xl space-y-6 px-4 py-8 text-gray-900">
       <header className="space-y-2">
         <Link href="/admin" className="inline-flex text-sm font-semibold text-indigo-700 hover:underline">← Back to dashboard</Link>
         <h1 className="text-3xl font-bold text-gray-900">Review Form</h1>

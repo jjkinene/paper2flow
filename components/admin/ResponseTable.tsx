@@ -94,7 +94,7 @@ export default function ResponseTable({
 
       {/* Scrollable table wrapper */}
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
+        <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-gray-900">
           <thead className="bg-gray-50">
             <tr>
               {/* Fixed first column */}

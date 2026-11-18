@@ -19,7 +19,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       <nav className="bg-indigo-600 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
@@ -33,7 +33,7 @@ export default async function AdminLayout({
               <Link href="/admin" className="rounded-md bg-white/15 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
                 ← Dashboard
               </Link>
-              <span className="hidden text-sm text-indigo-200 sm:block">
+              <span className="hidden text-sm font-medium text-white sm:block">
                 {user.email}
               </span>
               <SignOutButton />

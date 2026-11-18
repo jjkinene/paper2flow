@@ -46,10 +46,10 @@ export default async function AdminPage() {
   );
 
   return (
-    <main className="mx-auto max-w-6xl p-6">
+    <main className="mx-auto max-w-6xl p-6 text-gray-900">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Your Forms</h1>
+          <h1 className="text-3xl font-bold text-gray-950">Your Forms</h1>
           <p className="mt-1 text-sm text-gray-800">
             Manage your digitized forms and collected responses.
           </p>
@@ -65,7 +65,7 @@ export default async function AdminPage() {
 
       {formsWithCounts.length === 0 ? (
         <div className="rounded-lg border border-dashed p-10 text-center">
-          <h2 className="text-lg font-semibold">No forms yet</h2>
+          <h2 className="text-lg font-semibold text-gray-950">No forms yet</h2>
 
           <p className="mt-2 text-sm text-gray-800">
             Upload your first paper form or scanned PDF to get started.
@@ -80,14 +80,14 @@ export default async function AdminPage() {
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-sm text-gray-900">
             <thead className="border-b bg-gray-50">
               <tr>
-                <th className="px-4 py-3 font-semibold">Form</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Responses</th>
-                <th className="px-4 py-3 font-semibold">Updated</th>
-                <th className="px-4 py-3 text-right font-semibold">
+                <th className="px-4 py-3 font-semibold text-gray-900">Form</th>
+                <th className="px-4 py-3 font-semibold text-gray-900">Status</th>
+                <th className="px-4 py-3 font-semibold text-gray-900">Responses</th>
+                <th className="px-4 py-3 font-semibold text-gray-900">Updated</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-900">
                   Actions
                 </th>
               </tr>
@@ -96,12 +96,12 @@ export default async function AdminPage() {
             <tbody>
               {formsWithCounts.map((form) => (
                 <tr key={form.id} className="border-b last:border-b-0">
-                  <td className="px-4 py-4 font-medium">
+                  <td className="px-4 py-4 font-semibold text-gray-950">
                     {form.title || "Untitled Form"}
                   </td>
 
                   <td className="px-4 py-4">
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize">
+                    <span className="rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-900 capitalize">
                       {form.status}
                     </span>
                   </td>
@@ -122,14 +122,14 @@ export default async function AdminPage() {
                         href={['draft', 'processing', 'failed'].includes(form.status)
                           ? `/admin/forms/${form.id}/status`
                           : `/admin/forms/${form.id}/review`}
-                        className="font-medium underline"
+                        className="font-semibold text-indigo-800 underline underline-offset-2 hover:text-indigo-950"
                       >
                         {['draft', 'processing', 'failed'].includes(form.status) ? 'View Status' : 'Review'}
                       </Link>
 
                       <Link
                         href={`/admin/forms/${form.id}/responses`}
-                        className="font-medium underline"
+                        className="font-semibold text-indigo-800 underline underline-offset-2 hover:text-indigo-950"
                       >
                         Responses
                       </Link>
